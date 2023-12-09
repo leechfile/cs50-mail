@@ -28,20 +28,84 @@ function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
-
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
-  // send / inbox /  archive
+  fetch('/emails/'+mailbox)
+  .then(response => response.json())
+  .then(emails => {
+      // create the html email to display each email
+      displayEmails(emails);
+  });
+
+
+
+}
+
+function displayEmails(emails) {
+  const emailsContainer = document.querySelector('#emails-view');
+
+  // Clear previous content
+  emailsContainer.innerHTML = '';
+
+  // Iterate through each email and create HTML for display
+  emails.forEach(email => {
+    const emailDiv = document.createElement('div');
+
+    const senderDiv = document.createElement('div');
+    senderDiv.innerHTML = `<strong>From:</strong> ${email.sender}`;
+    emailDiv.appendChild(senderDiv);
+
+    const subjectDiv = document.createElement('div');
+    subjectDiv.innerHTML = `<strong>Subject:</strong> ${email.subject}`;
+
+    emailDiv.appendChild(subjectDiv);
+
+    const timestampDiv = document.createElement('div');
+    timestampDiv.innerHTML = `<strong>Timestamp:</strong> ${email.timestamp}`;
+    emailDiv.appendChild(timestampDiv);
+
+    emailDiv.appendChild(document.createElement('hr'))
+    // Add click event to view email details
+    emailDiv.addEventListener('click', () => loadEmailsDetails(email.id));
+
+    // Append the email HTML to the container
+    emailsContainer.appendChild(emailDiv);
+  });
+}
+
+function loadEmailsDetails(email_id)
+{
+    const emailsContainer = document.querySelector('#emails-view');
+    emailsContainer.innerHTML = '';
+    // add email more style
+    fetch('emails/'+email_id)
+        .then(response=>response.json())
+        .then(email=>{
+          // create the email block
+          const sender = document.createElement('div')
+          sender.innerHTML = email.sender
+          emailsContainer.appendChild(sender)
+
+          const subject = document.createElement('div')
+          subject.innerHTML = email.subject
+          emailsContainer.appendChild(subject)
+
+          const body = document.createElement('div')
+          body.innerHTML = email.body
+          emailsContainer.appendChild(body)
+
+        })
+
 
 }
 
 function send_email(){
 
   // get the content
-  recipients = document.querySelector('#compose-recipients').value
-  subject = document.querySelector('#compose-subject').value
-  body = document.querySelector('#compose-body').value
+  let recipients = document.querySelector('#compose-recipients').value;
+  let subject = document.querySelector('#compose-subject').value;
+  let body = document.querySelector('#compose-body').value;
 
   // send the post requests
   fetch('/emails', {
@@ -57,6 +121,8 @@ function send_email(){
   .then(result => {
       console.log(result);
   });
+  // redirect to send box
+  load_mailbox('sent');
 }
 
 
