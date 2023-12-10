@@ -98,14 +98,17 @@ function loadEmailsDetails(email_id)
           emailsContainer.appendChild(document.createElement('hr'));
 
           const button_archive = document.createElement('button');
-          button_archive.value = 'archive';
-          button_archive.addEventListener('click', ()=>archive_email(email_id));
+          button_archive.type = 'button'; // 设置按钮类型为 'button'
+          button_archive.textContent = 'archive';
+          button_archive.addEventListener('click', () => archive_email(email_id));
           emailsContainer.appendChild(button_archive);
 
           const button_reply = document.createElement('button');
-          button_reply.value = 'reply';
-          button_reply.addEventListener('click',()=>reply_email(email_id));
+          button_reply.type = 'button'; // 设置按钮类型为 'button'
+          button_reply.textContent = 'reply';
+          button_reply.addEventListener('click', () => reply_email(email_id));
           emailsContainer.appendChild(button_reply);
+
 
         });
 
