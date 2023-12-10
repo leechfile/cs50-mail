@@ -76,6 +76,7 @@ function displayEmails(emails) {
 
 function loadEmailsDetails(email_id)
 {
+    // load single email and have detailed information
     const emailsContainer = document.querySelector('#emails-view');
     emailsContainer.innerHTML = '';
     // add email more style
@@ -83,21 +84,48 @@ function loadEmailsDetails(email_id)
         .then(response=>response.json())
         .then(email=>{
           // create the email block
-          const sender = document.createElement('div')
-          sender.innerHTML = email.sender
-          emailsContainer.appendChild(sender)
+          const sender = document.createElement('div');
+          sender.innerHTML = email.sender;
+          emailsContainer.appendChild(sender);
 
-          const subject = document.createElement('div')
-          subject.innerHTML = email.subject
-          emailsContainer.appendChild(subject)
+          const subject = document.createElement('div');
+          subject.innerHTML = email.subject;
+          emailsContainer.appendChild(subject);
 
-          const body = document.createElement('div')
-          body.innerHTML = email.body
-          emailsContainer.appendChild(body)
+          const body = document.createElement('div');
+          body.innerHTML = email.body;
+          emailsContainer.appendChild(body);
+          emailsContainer.appendChild(document.createElement('hr'));
 
-        })
+          const button_archive = document.createElement('button');
+          button_archive.value = 'archive';
+          button_archive.addEventListener('click', ()=>archive_email(email_id));
+          emailsContainer.appendChild(button_archive);
+
+          const button_reply = document.createElement('button');
+          button_reply.value = 'reply';
+          button_reply.addEventListener('click',()=>reply_email(email_id));
+          emailsContainer.appendChild(button_reply);
+
+        });
 
 
+}
+
+function archive_email(eid){
+    // send put request and redirect to inbox page
+    fetch('/emails/'+ eid, {
+        method: 'PUT',
+        body: JSON.stringify(
+            {archived: true})
+    });
+    load_mailbox('inbox');
+
+
+}
+
+function reply_email(eid){
+    console.log(eid);
 }
 
 function send_email(){
