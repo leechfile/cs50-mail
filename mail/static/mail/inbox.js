@@ -51,6 +51,7 @@ function displayEmails(emails) {
   // Iterate through each email and create HTML for display
   emails.forEach(email => {
     const emailDiv = document.createElement('div');
+    emailDiv.className='email'
 
     const senderDiv = document.createElement('div');
     senderDiv.innerHTML = `<strong>From:</strong> ${email.sender}`;
@@ -65,12 +66,18 @@ function displayEmails(emails) {
     timestampDiv.innerHTML = `<strong>Timestamp:</strong> ${email.timestamp}`;
     emailDiv.appendChild(timestampDiv);
 
-    emailDiv.appendChild(document.createElement('hr'))
     // Add click event to view email details
     emailDiv.addEventListener('click', () => loadEmailsDetails(email.id));
+    if (email.read){
+        emailDiv.classList.add('read')
+    }
+    else {
+        emailDiv.classList.add('unread')
+    }
 
     // Append the email HTML to the container
     emailsContainer.appendChild(emailDiv);
+    emailsContainer.appendChild(document.createElement('hr'))
   });
 }
 
@@ -79,6 +86,15 @@ function loadEmailsDetails(email_id)
     // load single email and have detailed information
     const emailsContainer = document.querySelector('#emails-view');
     emailsContainer.innerHTML = '';
+
+    // mark the email is readable
+    fetch('email/'+email_id,{
+        method:'put',
+        body:JSON.stringify({
+            read:true
+        })
+    });
+
     // add email more style
     fetch('emails/'+email_id)
         .then(response=>response.json())
@@ -129,6 +145,18 @@ function archive_email(eid){
 
 function reply_email(eid){
     console.log(eid);
+    // load compose view
+    compose_email();
+    fetch('/email/'+eid)
+        .then(response=>response.json())
+        .then(email=> {
+            // load
+            document.querySelector('#compose-recipients').textContent = email.sender;
+            document.querySelector('#compose-subject').textContent = 're:'+email.subject;
+            document.querySelector('#compose-body').textContent = 'write in '+email.timestamp+': '
+        })
+
+
 }
 
 function send_email(){
