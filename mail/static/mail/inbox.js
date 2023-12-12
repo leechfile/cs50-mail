@@ -39,7 +39,6 @@ function load_mailbox(mailbox) {
   });
 
 
-
 }
 
 function displayEmails(emails) {
@@ -88,7 +87,7 @@ function loadEmailsDetails(email_id)
     emailsContainer.innerHTML = '';
 
     // mark the email is readable
-    fetch('email/'+email_id,{
+    fetch('emails/'+email_id,{
         method:'put',
         body:JSON.stringify({
             read:true
@@ -151,9 +150,9 @@ function reply_email(eid){
         .then(response=>response.json())
         .then(email=> {
             // load
-            document.querySelector('#compose-recipients').textContent = email.sender;
-            document.querySelector('#compose-subject').textContent = 're:'+email.subject;
-            document.querySelector('#compose-body').textContent = 'write in '+email.timestamp+': '
+            document.querySelector('#compose-recipients').innerHTML = email.sender;
+            document.querySelector('#compose-subject').innerHTML = 're:'+email.subject;
+            document.querySelector('#compose-body').innerHTML = 'write in '+email.timestamp+': '
         })
 
 
