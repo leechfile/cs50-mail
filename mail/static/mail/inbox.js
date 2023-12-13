@@ -94,38 +94,60 @@ function loadEmailsDetails(email_id)
         })
     });
 
+
     // add email more style
-    fetch('emails/'+email_id)
-        .then(response=>response.json())
-        .then(email=>{
-          // create the email block
-          const sender = document.createElement('div');
-          sender.innerHTML = email.sender;
-          emailsContainer.appendChild(sender);
-
-          const subject = document.createElement('div');
-          subject.innerHTML = email.subject;
-          emailsContainer.appendChild(subject);
-
-          const body = document.createElement('div');
-          body.innerHTML = email.body;
-          emailsContainer.appendChild(body);
-          emailsContainer.appendChild(document.createElement('hr'));
-
-          const button_archive = document.createElement('button');
-          button_archive.type = 'button'; // 设置按钮类型为 'button'
-          button_archive.textContent = 'archive';
-          button_archive.addEventListener('click', () => archive_email(email_id));
-          emailsContainer.appendChild(button_archive);
-
-          const button_reply = document.createElement('button');
-          button_reply.type = 'button'; // 设置按钮类型为 'button'
-          button_reply.textContent = 'reply';
-          button_reply.addEventListener('click', () => reply_email(email_id));
-          emailsContainer.appendChild(button_reply);
+    fetch('emails/' + email_id)
+      .then(response => response.json())
+      .then(email => {
+        // create the email block
+        const preBlock = document.createElement('div');
+        preBlock.classList.add('email-block', 'bg-light','border','border-primary','border-sm','rounded'); // 添加自定义类和Bootstrap类
+        emailsContainer.appendChild(preBlock);
 
 
-        });
+
+        // Sender
+        const sender = document.createElement('div');
+        sender.innerHTML = email.sender;
+        preBlock.appendChild(sender);
+
+        // Subject
+        const subject = document.createElement('div');
+        subject.innerHTML = email.subject;
+        preBlock.appendChild(subject);
+
+        // Body
+        const body = document.createElement('div');
+        body.classList.add('bg-info','border','border-primary','border-sm','rounded','rounded-md')
+        body.innerHTML = email.body;
+
+
+        // Divider
+        const divider = document.createElement('hr');
+        preBlock.appendChild(divider);
+
+        // Buttons Container
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.classList.add('buttons-container', 'bg-light'); // 添加自定义类和Bootstrap类
+        preBlock.appendChild(buttonsContainer);
+
+        // Archive Button
+        const buttonArchive = document.createElement('button');
+        buttonArchive.type = 'button';
+        buttonArchive.textContent = 'Archive';
+        buttonArchive.classList.add('btn', 'btn-primary'); // 添加Bootstrap按钮类
+        buttonArchive.addEventListener('click', () => archive_email(email_id));
+        buttonsContainer.appendChild(buttonArchive);
+
+        // Reply Button
+        const buttonReply = document.createElement('button');
+        buttonReply.type = 'button';
+        buttonReply.textContent = 'Reply';
+        buttonReply.classList.add('btn', 'btn-secondary'); // 添加Bootstrap按钮类
+        buttonReply.addEventListener('click', () => reply_email(email_id));
+        buttonsContainer.appendChild(buttonReply);
+      });
+
 
 
 }

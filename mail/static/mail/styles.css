@@ -15,4 +15,7 @@ textarea {
 .unread {
   background-color: #fff; /* 未读背景色 */
 }
+.btn{
+  margin: 10px;
+}
 
