@@ -101,35 +101,36 @@ function loadEmailsDetails(email_id)
       .then(email => {
         // create the email block
         const preBlock = document.createElement('div');
-        preBlock.classList.add('email-block', 'bg-light','border','border-primary','border-sm','rounded'); // 添加自定义类和Bootstrap类
+        preBlock.classList.add('email-block','border','border-primary','border-sm','rounded'); // 添加自定义类和Bootstrap类
         emailsContainer.appendChild(preBlock);
 
 
 
         // Sender
         const sender = document.createElement('div');
-        sender.innerHTML = email.sender;
+        sender.innerHTML = '<strong>sender: </strong>'+email.sender;
         preBlock.appendChild(sender);
 
         // Subject
         const subject = document.createElement('div');
-        subject.innerHTML = email.subject;
+        subject.innerHTML ='<strong>subject: </strong>'+ email.subject;
         preBlock.appendChild(subject);
-
-        // Body
-        const body = document.createElement('div');
-        body.classList.add('bg-info','border','border-primary','border-sm','rounded','rounded-md')
-        body.innerHTML = email.body;
-
 
         // Divider
         const divider = document.createElement('hr');
-        preBlock.appendChild(divider);
+        emailsContainer.appendChild(divider);
+
+        // Body
+        const body = document.createElement('div');
+        body.classList.add('email-body','border','border-primary','border-sm','rounded','rounded-md')
+        body.innerHTML = email.body;
+
+        emailsContainer.appendChild(body)
+
 
         // Buttons Container
         const buttonsContainer = document.createElement('div');
         buttonsContainer.classList.add('buttons-container', 'bg-light'); // 添加自定义类和Bootstrap类
-        preBlock.appendChild(buttonsContainer);
 
         // Archive Button
         const buttonArchive = document.createElement('button');
@@ -146,6 +147,8 @@ function loadEmailsDetails(email_id)
         buttonReply.classList.add('btn', 'btn-secondary'); // 添加Bootstrap按钮类
         buttonReply.addEventListener('click', () => reply_email(email_id));
         buttonsContainer.appendChild(buttonReply);
+
+        emailsContainer.appendChild(buttonsContainer);
       });
 
 
@@ -164,21 +167,20 @@ function archive_email(eid){
 
 }
 
-function reply_email(eid){
+function reply_email(eid) {
     console.log(eid);
     // load compose view
     compose_email();
-    fetch('/email/'+eid)
-        .then(response=>response.json())
-        .then(email=> {
+    fetch('/emails/' + eid)
+        .then(response => response.json())
+        .then(email => {
             // load
-            document.querySelector('#compose-recipients').innerHTML = email.sender;
-            document.querySelector('#compose-subject').innerHTML = 're:'+email.subject;
-            document.querySelector('#compose-body').innerHTML = 'write in '+email.timestamp+': '
-        })
-
-
+            document.querySelector('#compose-recipients').value = email.sender;
+            document.querySelector('#compose-subject').value = 're:' + email.subject;
+            document.querySelector('#compose-body').value = 'write in ' + email.timestamp + ': ';
+        });
 }
+
 
 function send_email(){
 

@@ -18,4 +18,11 @@ textarea {
 .btn{
   margin: 10px;
 }
-
+.email-body{
+  padding: 10px;
+  margin: 5px 0px;
+}
+.email-block{
+  background-color: #f2f2f2;
+  padding: 10px;
+}
